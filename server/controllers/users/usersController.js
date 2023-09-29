@@ -7,7 +7,7 @@ exports.getUsers = function (storage, log){
         try {
             storage.getAllUsers().then((users) => {
                 log.debugMsg(op, "getAllUsers success", users);
-                res.status(200).send(users.rows);
+                res.json(users);
             });
         } catch (err) {
             log.errorMsg(op, "error getting all users", err);
