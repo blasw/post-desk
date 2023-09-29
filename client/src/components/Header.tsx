@@ -18,7 +18,7 @@ function Header() {
 
           <BiUser className="text-gray-200 rounded-md transition-all duration-200 hover:bg-gray-200 hover:text-gray-800 p-1 cursor-pointer" size={35}/>
 
-          <h1 className="text-gray-300">Username</h1>
+          <h1 className="text-gray-300 select-none">Username</h1>
         </div>
       </div>
     </div>
