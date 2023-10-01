@@ -16,7 +16,6 @@ function PostDesk() {
 
   useEffect(()=>{
     doFetchPosts();
-    console.log(data);
   }, []);
 
   const loading = (
@@ -29,7 +28,6 @@ function PostDesk() {
     loading
     :
     data.map((post) => {
-      console.log(post);
       return <PostItem key={post.id} title={post.title} content={post.content} username={post.author} createdAt={post.created_at} likes_count={post.likes_count} />
     })  
   );

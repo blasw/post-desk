@@ -10,7 +10,7 @@ function usersRouter(storage, log) {
     router.post('/signup', UsersController.signUpUser(storage, log));
     router.post('/login', UsersController.loginUser(storage, log));
     router.get("/auth", cookieJWTAuth, UsersController.authUser(storage, log));
-    router.get('/test', cookieJWTAuth, UsersController.test(storage, log));
+    router.get('/logout', cookieJWTAuth, UsersController.logoutUser(storage, log));
     
     return router;
 }

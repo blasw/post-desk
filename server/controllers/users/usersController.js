@@ -48,6 +48,10 @@ exports.loginUser = function (storage, log){
         try{
             const {username, password} = req.body;
             const dbPassword = await storage.getUser(username);
+            if (!dbPassword) {
+                log.debugMsg(op, "User does not exist");
+                return res.status(401).json({message: "User does not exist"});
+            }
             const authorized = await bcrypt.compare(password, dbPassword.password);
 
             if(authorized){
@@ -87,9 +91,16 @@ exports.authUser = (storage, log) => {
     })
 }
 
-//Test function for JWT middleware
-exports.test = function(storage, log) {
+exports.logoutUser = (storage, log) => {
+    const op = "usersController.logoutUser";
     return asyncHandler(async(req,res)=>{
-        console.log(req.username);
+        log.debugMsg(op, "requested to logout user", `ip: ${req.ip}`);
+        try{
+            res.clearCookie('token');
+            return res.status(200).json({message: "User logged out successfully"});
+        } catch (err) {
+            log.errorMsg(op, "error logging out user", err);
+            return res.status(500).json({message: "Error logging out user"});
+        }
     });
 }

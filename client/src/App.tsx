@@ -2,8 +2,11 @@ import { Routes, Route, BrowserRouter } from "react-router-dom";
 import MainPage from "./pages/MainPage";
 import UserPage from "./pages/UserPage";
 import NotFoundPage from "./pages/NotFoundPage";
+import useAuth from "./hooks/useAuth";
 
 function App() {
+  useAuth();
+
   return(
     <div className="bg-gray-900 h-[1000px]">
       <BrowserRouter>
