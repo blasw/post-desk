@@ -1,10 +1,17 @@
 const express = require('express');
+
+//importing controller for the users routes
 const UsersController = require('../../controllers/users/usersController');
+
+const {cookieJWTAuth} = require('../../middleware/cookieJWTAuth');
 
 function usersRouter(storage, log) {
     const router = express.Router();
-    router.get('/all', UsersController.getUsers(storage, log));
-    router.post('/add', UsersController.addUser(storage, log));
+    router.post('/signup', UsersController.signUpUser(storage, log));
+    router.post('/login', UsersController.loginUser(storage, log));
+    router.get("/auth", cookieJWTAuth, UsersController.authUser(storage, log));
+    router.get('/test', cookieJWTAuth, UsersController.test(storage, log));
+    
     return router;
 }
 

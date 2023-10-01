@@ -1,17 +1,19 @@
+
+//Storage class which is used to interact with database, requires a pool(db config from pool.js) to be passed in
 class Storage {
   constructor(pool) {
     this.pool = pool;
   }
 
-  //grabs all users from accounts table
-  getAllUsers() {
-    return new Promise( async(resolve, reject) => {
+  //grabs user with given username from accounts table
+  getUser(username) {
+    return new Promise(async (resolve, reject) => {
       const client = await this.pool.connect();
-      await client.query("SELECT * FROM accounts", (err, res) => {
-        if(err) {
+      await client.query("SELECT * FROM accounts WHERE username = $1", [username], (err, res) => {
+        if (err) {
           reject(err);
         } else {
-          resolve(res.rows);
+          resolve(res.rows[0]);
         }
       });
       await client.release();
@@ -33,20 +35,14 @@ class Storage {
       })
   }
 
-  //grabs all posts from posts table
-  // getAllPosts() {
-  //   return new Promise(async (resolve, reject) => {
-  //     const client = await this.pool.connect();
-  //     await client.query("SELECT * FROM posts", (err, res) => {
-  //       if(err) {
-  //         reject(err);
-  //       } else {
-  //         resolve(res);
-  //       }
-  //     });
-  //     await client.release();
-  //   })
-  // }
+  //Checks if user already exists in accounts table
+  async userExists(username) {
+    const client = await this.pool.connect();
+    const res = await client.query("SELECT * FROM accounts WHERE username = $1", [username]);
+    await client.release();
+    return res.rows.length > 0 ? true : false;
+  }
+
   //grabs all posts from posts table and finds the username of the author of each post from its' id and adds it to the post object
   getAllPosts() {
     return new Promise(async (resolve, reject) => {
@@ -58,7 +54,7 @@ class Storage {
           let posts = res.rows;
           for (let i = 0; i < posts.length; i++) {
             try {
-              const author = await this.findUser(posts[i].author_id);
+              const author = await this.#findUser(posts[i].author_id);
               posts[i].author = author.rows[0].username;
             } catch (err) {
               reject(err);
@@ -86,8 +82,8 @@ class Storage {
     });
   }
 
-  //finds a user by it's id
-  findUser(user_id) {
+  //finds a user by it's id. Used to find author's username for each post
+  #findUser(user_id) {
     return new Promise(async (resolve, reject) => {
       const client = await this.pool.connect();
       await client.query("SELECT * FROM accounts WHERE id = $1", [user_id], (err, res) => {
@@ -98,17 +94,6 @@ class Storage {
         }
       });
       await client.release();
-    });
-  }
-
-  findAuthor(author_id) {
-    const client = this.pool.connect();
-    client.query("SELECT * FROM accounts WHERE id = $1", [author_id], (err, res) => {
-      if(err) {
-        console.log(err);
-      } else {
-        return res;
-      }
     });
   }
 }

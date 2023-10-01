@@ -10,7 +10,7 @@ function App() {
         <Routes>
           <Route path="/" element={<MainPage />} />
           <Route path="/user" element={<UserPage />} />
-          <Route path="*" element={<NotFoundPage />} />
+          <Route path="/*" element={<NotFoundPage />} />
         </Routes>
       </BrowserRouter>
     </div>

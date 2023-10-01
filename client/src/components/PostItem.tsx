@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { BsSuitHeart, BsSuitHeartFill } from "react-icons/bs";
+import moment from "moment";
 
 interface PostItemProps {
   title: string,
@@ -12,6 +13,7 @@ interface PostItemProps {
 function PostItem({title, content, username, createdAt, likes_count}: PostItemProps) {
   const [liked, setLiked] = useState<boolean>(false);
   const [likes, setLikes] = useState<number>(likes_count);
+  const timePassed = moment(createdAt).fromNow();
 
   return (
     <div className="w-[32.1%] h-[250px] bg-[#263243] rounded-lg shadow-md transition-all hover:-translate-y-2 hover:scale-[1.03] hover:shadow-lg">
@@ -26,7 +28,7 @@ function PostItem({title, content, username, createdAt, likes_count}: PostItemPr
         </div>
 
         <div className="h-12 rounded-b-lg bg-[#702c95b6] flex items-center justify-around">
-          <div className="flex items-center">
+          <div className="flex items-center text-center justify-center w-[20%]">
             {liked ?
               <BsSuitHeartFill onClick={() => {
                 setLiked(!liked);
@@ -42,9 +44,9 @@ function PostItem({title, content, username, createdAt, likes_count}: PostItemPr
             <h1 className=" font-semibold select-none">{likes}</h1>
           </div>
 
-          <h1 className="font-bold select-none">{createdAt}</h1>
+          <h1 className="font-bold select-none text-center w-[40%]">{timePassed}</h1>
 
-          <h1 className="font-bold select-none">@{username}</h1>
+          <h1 className="font-bold select-none text-center w-[40%]">@{username}</h1>
         </div>
       </div>
     </div>

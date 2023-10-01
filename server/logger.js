@@ -1,6 +1,8 @@
 const DEBUG = "DEBUG";
 const PROD = "PROD";
 
+
+//Class that is used to log messages with different levels of environment. So you can change it to PROD and all debug messages will be hidden
 class Logger {
 
   /**

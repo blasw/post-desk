@@ -1,5 +1,7 @@
+//Every controller function should return asyncHandler in order to work
 const asyncHandler = require('express-async-handler');
 
+//Function to take every single post from db and return it as json
 exports.getPosts = function (storage, log){
   const op = "postsController.getPosts";
   return asyncHandler( async (req, res, next) => {
@@ -16,6 +18,7 @@ exports.getPosts = function (storage, log){
   });
 };
 
+//Function to add post to db
 exports.addPost = function (storage, log){
   const op = "postsController.addPost";
   return asyncHandler( async (req, res, next) => {
@@ -27,20 +30,6 @@ exports.addPost = function (storage, log){
     } catch (err) {
       log.errorMsg(op, "error adding post", err);
       res.status(500).send("Error adding post");
-    }
-  });
-};
-
-exports.findPostAuthor = function (storage, log){
-  const op = "postsController.findPostAuthor";
-  return asyncHandler( async (req, res, next) => {
-    try {
-      storage.findUser(Number(req.body.author_id)).then((author) => {
-        res.json({"username" : author.rows[0].username});
-      });
-    } catch (err) {
-      log.errorMsg(op, "error finding post author", err);
-      res.status(500).send("Error finding post author");
     }
   });
 };
