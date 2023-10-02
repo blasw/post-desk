@@ -6,15 +6,29 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { useAppDispatch } from "../hooks/reduxHooks";
 import { logout } from "../store/slices/userSlice";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Header() {
   const username = useSelector((state: { user: { username: string } }) => state.user.username);
   const useDispatch = useAppDispatch();
 
+  const notifyInfo = () => toast.info('Logged out!', {
+    position: "bottom-right",
+    autoClose: 3000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "dark",
+  });
+
   const handleLogOut = () => {
     //removing token from cookies
     axios.get("http://localhost:3000/users/logout", {withCredentials: true});
     useDispatch(logout());
+    notifyInfo();
   }
 
   return (
@@ -34,13 +48,12 @@ function Header() {
 
           {username !== null &&
             <div className="dropdown dropdown-hover">
-              <label tabIndex={0} className="m-1">{username}</label>
+              <label tabIndex={0} className="m-1 select-none">{username}</label>
               <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-[#263243] rounded-lg w-28">
                 <li className="text-gray-300 hover:cursor-pointer" onClick={handleLogOut}>Log Out</li>
               </ul>
             </div>
           }
-
         </div>
       </div>
     </div>

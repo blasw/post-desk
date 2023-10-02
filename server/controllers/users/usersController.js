@@ -50,7 +50,7 @@ exports.loginUser = function (storage, log){
             const dbPassword = await storage.getUser(username);
             if (!dbPassword) {
                 log.debugMsg(op, "User does not exist");
-                return res.status(401).json({message: "User does not exist"});
+                return res.status(200).json({authorized: false});
             }
             const authorized = await bcrypt.compare(password, dbPassword.password);
 
@@ -63,11 +63,10 @@ exports.loginUser = function (storage, log){
                 });
 
                 return res.status(200).json({
-                    message: "User logged in successfully",
-                    username: username
+                    authorized: true
                 });
             } else {
-                return res.status(401).json({message: "Authorization failed"});
+                return res.status(200).json({authorized: false});
             }
         } catch (err) {
             log.errorMsg(op, "error logging in user", err);
