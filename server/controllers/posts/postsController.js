@@ -8,7 +8,7 @@ exports.getPosts = function (storage, log){
     log.debugMsg(op, "requested all posts", `ip: ${req.ip}`);
     try {
       storage.getAllPosts().then((posts) => {
-        log.debugMsg(op, "getAllPosts success", posts);
+        log.debugMsg(op, "getAllPosts success");
         res.json(posts);
       });
     } catch (err) {
@@ -24,7 +24,7 @@ exports.addPost = function (storage, log){
   return asyncHandler( async (req, res, next) => {
     log.debugMsg(op, "requested to add post", `ip: ${req.ip}`);
     try {
-      await storage.addPost(req.body.title, req.body.content, req.body.author_id);
+      await storage.addPost(req.body.title, req.body.content, req.body.username);
       log.debugMsg(op, "addPost success", `title: ${req.body.title}`);
       res.status(200).send("Post added successfully");
     } catch (err) {

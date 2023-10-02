@@ -4,7 +4,6 @@ import { login } from "../store/slices/userSlice";
 import { useAppDispatch } from "../hooks/reduxHooks";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Link } from "react-router-dom";
 
 function LogIn() {
   const [username, setUsername] = useState<string>("");
@@ -22,7 +21,7 @@ function LogIn() {
     draggable: true,
     progress: undefined,
     theme: "dark",
-  });;
+  });
   const notifyError = (message: string) => toast.error(message, {
     position: "bottom-right",
     autoClose: 3000,
@@ -32,7 +31,7 @@ function LogIn() {
     draggable: true,
     progress: undefined,
     theme: "dark",
-  });;
+  });
 
   const LogInHandler = async () => {
     await axios.post("http://localhost:3000/users/login", {

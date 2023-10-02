@@ -82,6 +82,24 @@ class Storage {
     });
   }
 
+  addPost(title, content, username) {
+    return new Promise(async (resolve,reject)=>{
+      const client = await this.pool.connect();
+      const user = await this.getUser(username);
+      console.log(user);
+
+      await client.query("INSERT INTO posts (title, content, author_id) VALUES ($1, $2, $3)", [title, content, user.id], (err, res) => {
+        if(err) {
+          reject(err);
+        } else {
+          resolve(res);
+        }
+      });
+
+      await client.release();
+    });
+  }
+
   //finds a user by it's id. Used to find author's username for each post
   #findUser(user_id) {
     return new Promise(async (resolve, reject) => {

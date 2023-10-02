@@ -6,6 +6,7 @@ import { useAppSelector } from "../hooks/reduxHooks";
 import useThunk from "../hooks/useThunk";
 import { useThunkTuple } from "../hooks/useThunk";
 import Loader from "./Loader";
+import useNotify from "../hooks/useNotify";
 
 function PostDesk() {
   const [doFetchPosts, isFetchingPosts, fetchPostsError] : useThunkTuple = useThunk(fetchPostsThunk);
@@ -31,11 +32,16 @@ function PostDesk() {
       return <PostItem key={post.id} title={post.title} content={post.content} username={post.author} createdAt={post.created_at} likes_count={post.likes_count} />
     })  
   );
+  
+  const createPostHandler = async () => {
+    await doFetchPosts();
+    useNotify("success", "Post created successfully!");
+  }
 
   return(
     <div className="w-full flex justify-center h-[900px]">
       <div className="rounded-lg bg-gray-800 w-[85%]">
-        <PostDeskHeader />
+        <PostDeskHeader onPostCreate={createPostHandler}/>
 
         <div className="flex justify-center h-[95%]">
           <div className="w-[95%] h-fit flex flex-wrap gap-4 mt-5">
