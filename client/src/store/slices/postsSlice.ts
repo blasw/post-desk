@@ -7,7 +7,8 @@ interface Post {
   content: string,
   author: string,
   created_at: string,
-  likes_count: number
+  likes_count: number,
+  like: boolean,
 }
 
 const initialState = {

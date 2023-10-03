@@ -3,15 +3,17 @@ import { BsSuitHeart, BsSuitHeartFill } from "react-icons/bs";
 import moment from "moment";
 
 interface PostItemProps {
+  id: number,
   title: string,
   content: string,
   username: string,
   createdAt: string,
   likes_count: number,
+  like: boolean
 }
 
-function PostItem({title, content, username, createdAt, likes_count}: PostItemProps) {
-  const [liked, setLiked] = useState<boolean>(false);
+function PostItem({id, title, content, username, createdAt, likes_count, like}: PostItemProps) {
+  const [liked, setLiked] = useState<boolean>(like);
   const [likes, setLikes] = useState<number>(likes_count);
   const timePassed = moment(createdAt).fromNow();
 

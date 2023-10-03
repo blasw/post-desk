@@ -62,8 +62,44 @@ class Storage {
           }
           resolve(posts);
         }
-        await client.release();
       });
+      await client.release();
+    });
+  }
+
+  #getUserLikes(user_id) {
+    return new Promise(async(resolve,reject)=>{
+      const client = await this.pool.connect();
+      await client.query("SELECT * FROM likes WHERE user_id = $1", [user_id], (err,res)=>{
+        if(err){
+          reject(err);
+        } else {
+          resolve(res.rows);
+        }
+      });
+      await client.release();
+    })
+  }
+
+  //overloaded getAllPosts that should be called when user is logged in, it checks if user has liked each post and adds a "like" boolean to each post object
+  getAllPosts(username) {
+    return new Promise(async(resolve,reject)=>{
+      const client = await this.pool.connect();
+      const user_id = (await this.getUser(username)).id;
+      const user_likes = await this.#getUserLikes(user_id);
+      await client.query("SELECT * FROM posts", async(err,res)=>{
+        if(err){
+          reject(err);
+        } else {
+          let posts = res.rows;
+          posts = posts.map(post => ({
+            ...post,
+            like: user_likes.some(like => like.post_id == post.id)
+          }));
+          resolve(posts);
+        }
+      });
+      await client.release();
     });
   }
 
@@ -86,7 +122,6 @@ class Storage {
     return new Promise(async (resolve,reject)=>{
       const client = await this.pool.connect();
       const user = await this.getUser(username);
-      console.log(user);
 
       await client.query("INSERT INTO posts (title, content, author_id) VALUES ($1, $2, $3)", [title, content, user.id], (err, res) => {
         if(err) {
@@ -114,6 +149,22 @@ class Storage {
       await client.release();
     });
   }
+
+  //creates a like in likes table (with following user_id and post_id)
+  // NOT FINISHED.
+  //TODO increment likes_count in posts table  
+  addLike(user_id, post_id) {
+    return new Promise(async(resolve, reject)=>{
+      const client = await this.pool.connect();
+      await client.query("INSERT INTO likes (user_id, post_id) VALUES ($1, $2)", [user_id, post_id], (err, res) => {
+        if(err) {
+          reject(err);
+        } else {
+          resolve(true);
+        }
+      });
+    });
+  };
 }
 
 module.exports = Storage;

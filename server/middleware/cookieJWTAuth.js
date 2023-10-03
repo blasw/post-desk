@@ -12,3 +12,14 @@ exports.cookieJWTAuth = (req,res,next) => {
     return res.status(401).json({message: "Unauthorized"});
   }
 }
+
+exports.optionalCookieJWTAuth = (req,res,next) => {
+  const token = req.cookies.token;
+  try {
+    const username = jwt.verify(token, "debug");
+    req.username = username;
+    next();
+  } catch (err) {
+    next();
+  }
+}

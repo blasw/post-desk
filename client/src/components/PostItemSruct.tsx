@@ -15,8 +15,6 @@ function PostItemStruct({ onTitleChange, onContentChange, title, content }: Post
 
   const username = useSelector((state: { user: { username: string } }) => state.user.username);
 
-  console.log(username);
-
   return (
     <div className="w-full h-[250px] bg-[#263243] rounded-lg shadow-md">
       <div className="h-full w-full flex flex-col justify-between">

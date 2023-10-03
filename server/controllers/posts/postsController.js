@@ -7,10 +7,14 @@ exports.getPosts = function (storage, log){
   return asyncHandler( async (req, res, next) => {
     log.debugMsg(op, "requested all posts", `ip: ${req.ip}`);
     try {
-      storage.getAllPosts().then((posts) => {
-        log.debugMsg(op, "getAllPosts success");
-        res.json(posts);
-      });
+      const {username} = req.username;
+      let posts;
+      if(username){
+        posts = await storage.getAllPosts(username);
+      } else {
+        posts = await storage.getAllPosts();
+      }
+      res.json(posts);
     } catch (err) {
       log.errorMsg(op, "error getting all posts", err);
       res.status(500).send("Error getting all posts");
@@ -33,3 +37,20 @@ exports.addPost = function (storage, log){
     }
   });
 };
+
+exports.addLike = function (storage, log){
+  const op = "postsContoller.addLike";
+  return asyncHandler(async(req,res)=>{
+    log.debugMsg(op, "requested to add like", `ip: ${req.ip}`);
+    try {
+      const {username, post_id} = req.body;
+      const user_id = await storage.getUser(username);
+      await storage.addLike(user_id, post_id);
+      log.debugMsg(op, "addLike success", `username: ${username}, post_id: ${post_id}`);
+      res.status(200);
+    } catch (err){
+      log.errorMsg(op, "error adding like", err);
+      res.status(500);
+    }
+  });
+}

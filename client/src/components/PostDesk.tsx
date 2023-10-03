@@ -29,7 +29,7 @@ function PostDesk() {
     loading
     :
     data.map((post) => {
-      return <PostItem key={post.id} title={post.title} content={post.content} username={post.author} createdAt={post.created_at} likes_count={post.likes_count} />
+      return <PostItem key={post.id} id={Number(post.id)} title={post.title} content={post.content} username={post.author} createdAt={post.created_at} likes_count={post.likes_count} like={post.like}/>
     })  
   );
   
