@@ -29,7 +29,7 @@ function PostItemStruct({ onTitleChange, onContentChange, title, content }: Post
             <textarea value={c} onChange={(e)=>{
               setContent(e.target.value);
               onContentChange(e.target.value);
-              }} maxLength={200} placeholder="Content" className="text-gray-300 select-none w-full bg-inherit border-0 focus:border-0 focus:outline-none resize-none">
+              }} maxLength={250} placeholder="Content" className="text-gray-300 select-none w-full h-40 bg-inherit border-0 focus:border-0 focus:outline-none resize-none">
             </textarea>
           </div>
         </div>

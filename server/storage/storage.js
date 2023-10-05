@@ -20,19 +20,47 @@ class Storage {
     });
   }
 
+  getUserStats(username) {
+    return new Promise(async (resolve, reject) => {
+      const client = await this.pool.connect();
+      try {
+        //getting base user info
+        const userInfo = (await client.query("SELECT * FROM accounts WHERE username = $1", [username])).rows[0];
+        delete userInfo.password;
+
+        //getting amount of user's posts
+        const postsCount = (await client.query("SELECT COUNT(*) FROM posts WHERE author_id = $1", [userInfo.id])).rows[0].count;
+
+        //getting amount of user's likes
+        const likesCount = (await client.query("SELECT COUNT(*) FROM likes WHERE user_id = $1", [userInfo.id])).rows[0].count;
+
+        delete userInfo.id;
+        userInfo.postsCount = postsCount;
+        userInfo.likesCount = likesCount;
+
+        console.log(userInfo);
+        resolve(userInfo);
+      } catch (err) {
+        reject(err);
+      } finally {
+        await client.release();
+      }
+    });
+  }
+
   //adds user with username, email, and password to accounts table
   addUser(username, email, password) {
-      return new Promise(async (resolve, reject) => {
-          const client = await this.pool.connect();
-          await client.query("INSERT INTO accounts (username, email, password) VALUES ($1, $2, $3)", [username, email, password], (err, res) => {
-              if (err){
-                reject(err);
-              } else {
-                resolve(res);
-              }
-            });
-          await client.release();
-      })
+    return new Promise(async (resolve, reject) => {
+      const client = await this.pool.connect();
+      await client.query("INSERT INTO accounts (username, email, password) VALUES ($1, $2, $3)", [username, email, password], (err, res) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(res);
+        }
+      });
+      await client.release();
+    })
   }
 
   //Checks if user already exists in accounts table
@@ -58,7 +86,7 @@ class Storage {
               posts[i].author = author.rows[0].username;
             } catch (err) {
               reject(err);
-            } 
+            }
           }
           resolve(posts);
         }
@@ -67,11 +95,11 @@ class Storage {
     });
   }
 
-  #getUserLikes(user_id) {  
-    return new Promise(async(resolve,reject)=>{
+  #getUserLikes(user_id) {
+    return new Promise(async (resolve, reject) => {
       const client = await this.pool.connect();
-      await client.query("SELECT * FROM likes WHERE user_id = $1", [user_id], (err,res)=>{
-        if(err){
+      await client.query("SELECT * FROM likes WHERE user_id = $1", [user_id], (err, res) => {
+        if (err) {
           reject(err);
         } else {
           resolve(res.rows);
@@ -83,12 +111,12 @@ class Storage {
 
   //overloaded getAllPosts that should be called when user is logged in, it checks if user has liked each post and adds a "like" boolean to each post object
   getAllPostsAuth(username) {
-    return new Promise(async(resolve,reject)=>{
+    return new Promise(async (resolve, reject) => {
       const client = await this.pool.connect();
       const user_id = (await this.getUser(username)).id;
       const user_likes = await this.#getUserLikes(user_id);
-      await client.query("SELECT * FROM posts", async(err,res)=>{
-        if(err){
+      await client.query("SELECT * FROM posts", async (err, res) => {
+        if (err) {
           reject(err);
         } else {
           let posts = res.rows;
@@ -112,27 +140,13 @@ class Storage {
   }
 
   //adds a post to the posts table
-  addPost(title, content, authorID) {
-    return new Promise(async (resolve, reject) => {
-      const client = await this.pool.connect();
-      await client.query("INSERT INTO posts (title, content, author_id) VALUES ($1, $2, $3)", [title, content, authorID], (err, res) => {
-        if(err) {
-          reject(err);
-        } else {
-          resolve(res);
-        }
-      });
-      await client.release();
-    });
-  }
-
   addPost(title, content, username) {
-    return new Promise(async (resolve,reject)=>{
+    return new Promise(async (resolve, reject) => {
       const client = await this.pool.connect();
       const user = await this.getUser(username);
 
       await client.query("INSERT INTO posts (title, content, author_id) VALUES ($1, $2, $3)", [title, content, user.id], (err, res) => {
-        if(err) {
+        if (err) {
           reject(err);
         } else {
           resolve(res);
@@ -148,7 +162,7 @@ class Storage {
     return new Promise(async (resolve, reject) => {
       const client = await this.pool.connect();
       await client.query("SELECT * FROM accounts WHERE id = $1", [user_id], (err, res) => {
-        if(err) {
+        if (err) {
           reject(err);
         } else {
           resolve(res);
@@ -159,19 +173,16 @@ class Storage {
   }
 
   //creates a like in likes table (with following user_id and post_id)
-  // NOT FINISHED.
-  //TODO increment likes_count in posts table  
   addLike(user_id, post_id) {
-    return new Promise(async(resolve, reject)=>{
+    return new Promise(async (resolve, reject) => {
       const client = await this.pool.connect();
-      console.log("PASS");
       await client.query("INSERT INTO likes (user_id, post_id) VALUES ($1, $2)", [user_id, post_id], (err, res) => {
-        if(err) {
+        if (err) {
           reject(err);
         }
       });
       await client.query("UPDATE posts SET likes_count = likes_count + 1 WHERE id = $1", [post_id], (err, res) => {
-        if(err) {
+        if (err) {
           reject(err);
         }
       });
@@ -179,6 +190,25 @@ class Storage {
       await client.release();
     });
   };
+
+  //deletes a like from likes table (with following user_id and post_id)
+  undoLike(user_id, post_id) {
+    return new Promise(async (resolve, reject) => {
+      const client = await this.pool.connect();
+      await client.query("DELETE FROM likes WHERE user_id = $1 AND post_id = $2", [user_id, post_id], (err, res) => {
+        if (err) {
+          reject(err);
+        }
+      });
+      await client.query("UPDATE posts SET likes_count = likes_count - 1 WHERE id = $1", [post_id], (err, res) => {
+        if (err) {
+          reject(err);
+        }
+      });
+      resolve(true);
+      await client.release();
+    });
+  }
 }
 
 module.exports = Storage;

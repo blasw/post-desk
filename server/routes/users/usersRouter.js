@@ -11,6 +11,7 @@ function usersRouter(storage, log) {
     router.post('/login', UsersController.loginUser(storage, log));
     router.get("/auth", cookieJWTAuth, UsersController.authUser(storage, log));
     router.get('/logout', cookieJWTAuth, UsersController.logoutUser(storage, log));
+    router.get("/stats", cookieJWTAuth, UsersController.getStats(storage, log));
     
     return router;
 }

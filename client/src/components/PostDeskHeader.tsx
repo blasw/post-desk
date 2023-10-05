@@ -5,6 +5,7 @@ import PostItemStruct from "./PostItemSruct";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import useNotify from "../hooks/useNotify";
+import vars from "../vars";
 
 interface PostDeskHeaderProps {
   onPostCreate: () => void;
@@ -37,7 +38,7 @@ function PostDeskHeader({onPostCreate} : PostDeskHeaderProps) {
       return;
     }
 
-    await axios.post("http://localhost:3000/posts/add", {
+    await axios.post(`${vars.server_url}/posts/add`, {
       title, content, username
     }, {withCredentials: true}).then((res) => {
       if (res.status === 500){

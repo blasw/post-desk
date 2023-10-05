@@ -20,7 +20,7 @@ function PostDesk() {
   }, []);
 
   const loading = (
-    <div className="w-full h-full flex items-center justify-center">
+    <div className="w-full h-[500px] flex items-center justify-center">
       <Loader />
     </div>
   );

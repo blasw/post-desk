@@ -2,14 +2,14 @@
 const asyncHandler = require('express-async-handler');
 
 //Function to take every single post from db and return it as json
-exports.getPosts = function (storage, log){
+exports.getPosts = function (storage, log) {
   const op = "postsController.getPosts";
-  return asyncHandler( async (req, res, next) => {
+  return asyncHandler(async (req, res, next) => {
     log.debugMsg(op, "requested all posts", `ip: ${req.ip}`);
     let posts;
     try {
       try {
-        const {username} = req.username;
+        const { username } = req.username;
         posts = await storage.getAllPostsAuth(username);
       } catch (err) {
         posts = await storage.getAllPosts();
@@ -23,9 +23,9 @@ exports.getPosts = function (storage, log){
 };
 
 //Function to add post to db
-exports.addPost = function (storage, log){
+exports.addPost = function (storage, log) {
   const op = "postsController.addPost";
-  return asyncHandler( async (req, res, next) => {
+  return asyncHandler(async (req, res, next) => {
     log.debugMsg(op, "requested to add post", `ip: ${req.ip}`);
     try {
       await storage.addPost(req.body.title, req.body.content, req.body.username);
@@ -38,18 +38,35 @@ exports.addPost = function (storage, log){
   });
 };
 
-exports.addLike = function (storage, log){
+exports.addLike = function (storage, log) {
   const op = "postsContoller.addLike";
-  return asyncHandler(async(req,res)=>{
+  return asyncHandler(async (req, res) => {
     log.debugMsg(op, "requested to add like", `ip: ${req.ip}`);
     try {
-      const {username, post_id} = req.body;
+      const { username, post_id } = req.body;
       const user_id = (await storage.getUser(username)).id;
       await storage.addLike(user_id, post_id);
       log.debugMsg(op, "addLike success", `username: ${username}, post_id: ${post_id}`);
       res.status(200);
-    } catch (err){
+    } catch (err) {
       log.errorMsg(op, "error adding like", err);
+      res.status(500);
+    }
+  });
+}
+
+exports.undoLike = function (storage, log) {
+  const op = "postsController.undoLike";
+  return asyncHandler(async (req, res) => {
+    log.debugMsg(op, "requested to undo like", `ip: ${req.ip}`);
+    try {
+      const { username, post_id } = req.body;
+      const user_id = (await storage.getUser(username)).id;
+      await storage.undoLike(user_id, post_id);
+      log.debugMsg(op, "undoLike success", `username: ${username}, post_id: ${post_id}`);
+      res.status(200);
+    } catch (err) {
+      log.errorMsg(op, "error undoing like", err);
       res.status(500);
     }
   });

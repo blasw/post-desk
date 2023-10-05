@@ -1,6 +1,7 @@
 import { useSelector } from "react-redux";
 import Header from "../components/Header";
 import LogIn from "../components/LogIn";
+import UserStats from "../components/UserStats";
 
 function UserPage() {
   const username = useSelector((state: { user: { username: string } }) => state.user.username);
@@ -11,9 +12,7 @@ function UserPage() {
     content = <LogIn />;
   } else {
     content = (
-      <div className="w-full flex justify-center">
-        <h1 className="text-3xl text-gray-300">Authorized</h1>
-      </div>
+      <UserStats />
     )
   }
 

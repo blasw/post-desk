@@ -90,6 +90,7 @@ exports.authUser = (storage, log) => {
     })
 }
 
+//Function which will be called after user has been authorized by JWT middleware. It will remove user's JWT token from cookies and log him out
 exports.logoutUser = (storage, log) => {
     const op = "usersController.logoutUser";
     return asyncHandler(async(req,res)=>{
@@ -100,6 +101,21 @@ exports.logoutUser = (storage, log) => {
         } catch (err) {
             log.errorMsg(op, "error logging out user", err);
             return res.status(500).json({message: "Error logging out user"});
+        }
+    });
+}
+
+exports.getStats = (storage, log) => {
+    const op = "usersController.getStats";
+    return asyncHandler(async(req,res)=>{
+        log.debugMsg(op, "requested user's stats", `ip: ${req.ip}`);
+        try {
+            const {username} = req;
+            const user = await storage.getUserStats(username.username);
+            return res.status(200).json(user);
+        } catch (err) {
+            log.errorMsg(op, "error getting user's stats", err);
+            return res.status(500);
         }
     });
 }

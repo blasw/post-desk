@@ -10,6 +10,7 @@ function postsRouter(storage, log) {
   router.get('/all', optionalCookieJWTAuth, PostsController.getPosts(storage, log));
   router.post('/add', cookieJWTAuth, PostsController.addPost(storage, log));
   router.post('/like', cookieJWTAuth, PostsController.addLike(storage, log));
+  router.post('/unlike', cookieJWTAuth, PostsController.undoLike(storage, log));
   return router;
 }
 

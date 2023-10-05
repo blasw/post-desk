@@ -2,8 +2,8 @@ import { useState } from "react";
 import axios from "axios";
 import { login } from "../store/slices/userSlice";
 import { useAppDispatch } from "../hooks/reduxHooks";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import useNotify from "../hooks/useNotify";
+import vars from "../vars";
 
 function LogIn() {
   const [username, setUsername] = useState<string>("");
@@ -12,38 +12,17 @@ function LogIn() {
   const [signup, setSignup] = useState<boolean>(false);
   const useDispatch = useAppDispatch();
 
-  const notifySuccess = (message: string) => toast.success(message, {
-    position: "bottom-right",
-    autoClose: 3000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: "dark",
-  });
-  const notifyError = (message: string) => toast.error(message, {
-    position: "bottom-right",
-    autoClose: 3000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: "dark",
-  });
-
   const LogInHandler = async () => {
-    await axios.post("http://localhost:3000/users/login", {
+    await axios.post(`${vars.server_url}/users/login`, {
       username: username,
       password: password
     }, { withCredentials: true, headers: { "Content-Type": "application/json" } }).then((res) => {
       const auth = res.data.authorized;
       if (auth) {
         useDispatch(login(username));
-        notifySuccess("Logged in successfully!");
+        useNotify("success", "Logged in successfully!");
       } else {
-        notifyError("Invalid username or password!");
+        useNotify("error", "Invalid username or password!");
       }
     });
     setPassword("");
@@ -51,18 +30,22 @@ function LogIn() {
   }
 
   const signUpHandler = async () => {
-    await axios.post("http://localhost:3000/users/signup", {
-      username, email, password
-    }, { withCredentials: true, headers: { "Content-Type": "application/json" } }).then((res) => {
-      if (res.status === 409) {
-        notifyError("Username already exists!");
+    try{
+      await axios.post(`${vars.server_url}/users/signup`, {
+        username, email, password
+      }, { withCredentials: true, headers: { "Content-Type": "application/json" } });
+      useNotify("success", "Signed up successfully!");
+      useDispatch(login(username));
+    } catch (err: any) {
+      if(err.response.status === 409) {
+        useNotify("error", "Username already exists!");
+        return;
       }
-    });
-    notifySuccess("Signed up successfully!");
-    useDispatch(login(username));
-    setPassword("");
-    setUsername("");
-    setEmail("");
+    } finally {
+      setPassword("");
+      setUsername("");
+      setEmail("");
+    }
   }
 
   return (

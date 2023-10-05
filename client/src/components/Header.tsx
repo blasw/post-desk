@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import { useAppDispatch } from "../hooks/reduxHooks";
 import { logout } from "../store/slices/userSlice";
 import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import vars from "../vars";
 
 function Header() {
   const username = useSelector((state: { user: { username: string } }) => state.user.username);
@@ -26,7 +26,7 @@ function Header() {
 
   const handleLogOut = () => {
     //removing token from cookies
-    axios.get("http://localhost:3000/users/logout", {withCredentials: true});
+    axios.get(`${vars.server_url}/users/logout`, {withCredentials: true});
     useDispatch(logout());
     notifyInfo();
   }
