@@ -58,7 +58,7 @@ class Storage {
               posts[i].author = author.rows[0].username;
             } catch (err) {
               reject(err);
-            }
+            } 
           }
           resolve(posts);
         }
@@ -67,7 +67,7 @@ class Storage {
     });
   }
 
-  #getUserLikes(user_id) {
+  #getUserLikes(user_id) {  
     return new Promise(async(resolve,reject)=>{
       const client = await this.pool.connect();
       await client.query("SELECT * FROM likes WHERE user_id = $1", [user_id], (err,res)=>{
@@ -82,7 +82,7 @@ class Storage {
   }
 
   //overloaded getAllPosts that should be called when user is logged in, it checks if user has liked each post and adds a "like" boolean to each post object
-  getAllPosts(username) {
+  getAllPostsAuth(username) {
     return new Promise(async(resolve,reject)=>{
       const client = await this.pool.connect();
       const user_id = (await this.getUser(username)).id;
@@ -96,6 +96,14 @@ class Storage {
             ...post,
             like: user_likes.some(like => like.post_id == post.id)
           }));
+          for (let i = 0; i < posts.length; i++) {
+            try {
+              const author = await this.#findUser(posts[i].author_id);
+              posts[i].author = author.rows[0].username;
+            } catch (err) {
+              reject(err);
+            }
+          }
           resolve(posts);
         }
       });
@@ -156,13 +164,19 @@ class Storage {
   addLike(user_id, post_id) {
     return new Promise(async(resolve, reject)=>{
       const client = await this.pool.connect();
+      console.log("PASS");
       await client.query("INSERT INTO likes (user_id, post_id) VALUES ($1, $2)", [user_id, post_id], (err, res) => {
         if(err) {
           reject(err);
-        } else {
-          resolve(true);
         }
       });
+      await client.query("UPDATE posts SET likes_count = likes_count + 1 WHERE id = $1", [post_id], (err, res) => {
+        if(err) {
+          reject(err);
+        }
+      });
+      resolve(true);
+      await client.release();
     });
   };
 }
