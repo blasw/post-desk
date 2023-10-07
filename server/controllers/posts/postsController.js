@@ -9,10 +9,10 @@ exports.getPosts = function (storage, log) {
     let posts;
     try {
       try {
-        const { username } = req.username;
-        posts = await storage.getAllPostsAuth(username);
+        const { username, sortBy, page } = req.username;
+        posts = await storage.getAllPostsAuth(username, sortBy, page);
       } catch (err) {
-        posts = await storage.getAllPosts();
+        posts = await storage.getAllPosts(sortBy, page);
       }
       res.json(posts);
     } catch (err) {

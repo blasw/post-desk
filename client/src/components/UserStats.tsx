@@ -39,7 +39,8 @@ function UserStats() {
   let content = (!userStats ?
     loading
     :
-    <div className="w-full h-full flex flex-col items-center gap-10 mt-28">
+    <div className="w-full h-full flex flex-col items-center gap-10 mt-12">
+      <h1 className="text-2xl">This Is Your Stats :)</h1>
       <div className="flex gap-10">
         <div className="flex flex-col gap-10 justify-around">
           <div className="flex flex-col items-center">

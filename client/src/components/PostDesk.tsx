@@ -43,10 +43,11 @@ function PostDesk() {
       <div className="rounded-lg bg-gray-800 w-[85%]">
         <PostDeskHeader onPostCreate={createPostHandler}/>
 
-        <div className="flex justify-center h-[95%]">
+        <div className="flex flex-col items-center justify-center h-[95%] gap-4">
           <div className="w-[95%] h-fit flex flex-wrap gap-4 mt-5">
             {content}
           </div>
+          1,2,3,4
         </div>
 
       </div>

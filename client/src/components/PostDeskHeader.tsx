@@ -1,11 +1,11 @@
 import "../assets/css.css";
 import DropDown from "./DropDown";
 import { useRef, useState } from "react";
-import PostItemStruct from "./PostItemSruct";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import useNotify from "../hooks/useNotify";
 import vars from "../vars";
+import { BsSuitHeart } from "react-icons/bs";
 
 interface PostDeskHeaderProps {
   onPostCreate: () => void;
@@ -23,14 +23,6 @@ function PostDeskHeader({onPostCreate} : PostDeskHeaderProps) {
       modalRef.current.showModal();
     }
   };
-
-  const titleChangeHandler = (value: string) => {
-    setTitle(value);
-  }
-
-  const contentChangeHandler = (value: string) => {
-    setContent(value);
-  }
 
   const submitHandler = async () => {
     if (username == null){
@@ -52,6 +44,41 @@ function PostDeskHeader({onPostCreate} : PostDeskHeaderProps) {
     onPostCreate();
   }
 
+  const PostItemStruct = (
+    <div className="w-full h-[250px] bg-[#263243] rounded-lg shadow-md">
+      <div className="h-full w-full flex flex-col justify-between">
+        <div className="px-4 pt-2">
+          <input value={title} onChange={(e)=>{
+            setTitle(e.target.value)
+            }} maxLength={30} placeholder="Title" className="text-center text-gray-300 text-xl font-semibold select-none w-full bg-inherit border-0 focus:border-0 focus:outline-none">
+            
+          </input>
+          <div className="">
+            <textarea value={content} onChange={(e)=>{
+              setContent(e.target.value);
+              }} maxLength={250} placeholder="Content" className="text-gray-300 select-none w-full h-40 bg-inherit border-0 focus:border-0 focus:outline-none resize-none">
+            </textarea>
+          </div>
+        </div>
+
+        <div className="h-12 rounded-b-lg bg-[#702c95b6] flex items-center justify-around">
+          <div className="flex items-center text-center justify-center w-[20%]">
+          <BsSuitHeart className="p-2 text-[#94004f]" size={42} />
+
+            <h1 className=" font-semibold select-none"></h1>
+          </div>
+
+          <h1 className="font-bold select-none text-center w-[40%]"></h1>
+
+          <h1 className="font-bold select-none text-center w-[40%]">@{username}</h1>
+        </div>
+      </div>
+    </div>
+  )
+
+
+
+
   return (
     <div className="w-full h-12 flex items-center justify-around rounded-t-lg bg-[#222d3c] shadow-xl">
       <div />
@@ -65,7 +92,7 @@ function PostDeskHeader({onPostCreate} : PostDeskHeaderProps) {
             <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 select-none focus:outline-none">✕</button>
           </form>
           <h3 className="font-bold text-lg text-center mb-5">Your Post</h3>
-          <PostItemStruct onContentChange={contentChangeHandler} onTitleChange={titleChangeHandler} content={content} title={title}/>
+          {PostItemStruct}
 
           <form method="dialog" className="flex justify-center items-center">
             <button onClick={submitHandler} className="w-[20%] h-10 rounded-md bg-[#007720b7] hover:bg-[#007720d6] text-gray-300 px-2 mt-5">Submit</button>
