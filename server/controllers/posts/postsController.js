@@ -8,8 +8,14 @@ exports.getPosts = function (storage, log) {
     log.debugMsg(op, "requested all posts", `ip: ${req.ip}`);
     let posts;
     try {
+      const { sort, page } = req.query;
+      const sortBy = sort === "new" ? "id DESC" : "likes_count DESC";
       try {
-        const { username, sortBy, page } = req.username;
+        const { username } = req.username;
+        if (sort === "yours"){
+          posts = await storage.getUserPosts(username, page);
+          return res.json(posts);
+        }
         posts = await storage.getAllPostsAuth(username, sortBy, page);
       } catch (err) {
         posts = await storage.getAllPosts(sortBy, page);
@@ -21,6 +27,20 @@ exports.getPosts = function (storage, log) {
     }
   });
 };
+
+//Function to return the number of pages for pagination
+exports.getPages = function (storage, log) {
+  const op = "postsController.getPages";
+  return asyncHandler(async (req, res) => {
+    log.debugMsg(op, "requested pages");
+    try{
+      const pages = await storage.getPagesCount();
+      res.json(pages);
+    } catch (err) {
+      res.status(500).send("Error getting pages");
+    }
+  });
+}
 
 //Function to add post to db
 exports.addPost = function (storage, log) {

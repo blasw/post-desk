@@ -75,10 +75,10 @@ class Storage {
   getAllPosts(sortTerm = "likes_count DESC", page = 1) {
     return new Promise(async (resolve, reject) => {
 
-      let offset = (page - 1) * 9;
+      let offset = (page - 1) * 12;
 
       const client = await this.pool.connect();
-      await client.query(`SELECT * FROM posts ORDER BY ${sortTerm} LIMIT 9 OFFSET ${offset}`, async (err, res) => {
+      await client.query(`SELECT * FROM posts ORDER BY ${sortTerm} LIMIT 12 OFFSET ${offset}`, async (err, res) => {
         if (err) {
           reject(err);
         } else {
@@ -123,15 +123,46 @@ class Storage {
         ...post,
         like: user_likes.some(like => like.post_id == post.id)
       }));
-      for(let i = 0; i < posts.length; i++) {
+      for (let i = 0; i < posts.length; i++) {
         try {
           const author = await this.#findUser(posts[i].author_id);
           posts[i].author = author.rows[0].username;
-        } catch(err) {
+        } catch (err) {
           reject(err);
         }
       }
       resolve(posts);
+      await client.release();
+    });
+  }
+
+  getUserPosts(username, page = 1) {
+    return new Promise(async (resolve, reject) => {
+      let offset = (page - 1) * 12;
+
+      const client = await this.pool.connect();
+      const user_id = (await this.getUser(username)).id;
+      const user_likes = await this.#getUserLikes(user_id);
+      await client.query("SELECT * FROM posts WHERE author_id = $1 ORDER BY id DESC LIMIT 12 OFFSET $2", [user_id, offset], async (err, res) => {
+        if (err) {
+          reject(err);
+        } else {
+          let posts = res.rows;
+          posts = posts.map(post => ({
+            ...post,
+            like: user_likes.some(like => like.post_id == post.id)
+          }));
+          for (let i = 0; i < posts.length; i++) {
+            try {
+              const author = await this.#findUser(posts[i].author_id);
+              posts[i].author = author.rows[0].username;
+            } catch (err) {
+              reject(err);
+            }
+          }
+          resolve(posts);
+        }
+      });
       await client.release();
     });
   }
@@ -143,7 +174,7 @@ class Storage {
         if (err) {
           reject(err);
         } else {
-          resolve(Math.ceil(res.rows[0].count / 9));
+          resolve(Math.ceil(res.rows[0].count / 12));
         }
       });
       await client.release();

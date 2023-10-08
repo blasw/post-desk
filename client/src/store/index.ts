@@ -11,6 +11,7 @@ const store = configureStore({
 
 export {store};
 export * from './thunks/fetchPosts';
+export * from './thunks/fetchPostsPushback';
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

@@ -8,10 +8,11 @@ import vars from "../vars";
 import { BsSuitHeart } from "react-icons/bs";
 
 interface PostDeskHeaderProps {
+  reff? : any,
   onPostCreate: () => void;
 }
 
-function PostDeskHeader({onPostCreate} : PostDeskHeaderProps) {
+function PostDeskHeader({reff, onPostCreate} : PostDeskHeaderProps) {
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
   const modalRef = useRef<HTMLDialogElement>(null);
@@ -80,7 +81,7 @@ function PostDeskHeader({onPostCreate} : PostDeskHeaderProps) {
 
 
   return (
-    <div className="w-full h-12 flex items-center justify-around rounded-t-lg bg-[#222d3c] shadow-xl">
+    <div ref={reff} className="w-full h-12 flex items-center justify-around rounded-t-lg bg-[#222d3c] shadow-xl">
       <div />
       <button className="button text-center w-36 text-lg select-none" onClick={openModal}>+ Add Post!</button>
       <DropDown />

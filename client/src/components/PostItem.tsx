@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import vars from "../vars";
 
 interface PostItemProps {
+  reff? : any,
   id: number,
   title: string,
   content: string,
@@ -16,7 +17,7 @@ interface PostItemProps {
   like: boolean
 }
 
-function PostItem({ id, title, content, authorname, createdAt, likes_count, like }: PostItemProps) {
+function PostItem({reff, id, title, content, authorname, createdAt, likes_count, like }: PostItemProps) {
   const [liked, setLiked] = useState<boolean>(like);
   const [likes, setLikes] = useState<number>(likes_count);
   const timePassed = moment(createdAt).fromNow();
@@ -68,7 +69,7 @@ function PostItem({ id, title, content, authorname, createdAt, likes_count, like
   }
 
   return (
-    <div className="w-[32.1%] h-[250px] bg-[#263243] rounded-lg shadow-md transition-all hover:-translate-y-2 hover:scale-[1.03] hover:shadow-lg">
+    <div ref={reff} className="w-[32.1%] h-[250px] bg-[#263243] rounded-lg shadow-md transition-all hover:-translate-y-2 hover:scale-[1.03] hover:shadow-lg">
       <div className="h-full w-full flex flex-col justify-between">
         <div className="px-4 pt-2">
           <div className="text-center text-gray-300 text-xl font-semibold select-none">

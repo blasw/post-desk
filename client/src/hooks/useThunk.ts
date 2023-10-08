@@ -15,7 +15,8 @@ const pause = (time?: number) => {
     })
 }
 
-function useThunk(thunk: Function, param? : any, pauseTime? : number) {
+function useThunk(thunk: Function, param?: any, pauseTime?: number) {
+    console.log(param)
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<Error | null>(null);
 

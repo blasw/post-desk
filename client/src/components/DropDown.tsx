@@ -1,22 +1,26 @@
 import { Fragment } from 'react'
 import { Menu, Transition } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
-import { useState } from 'react'
+import { useAppDispatch } from '../hooks/reduxHooks'
+import { changeSortBy } from '../store/slices/postsSlice'
+import { useSelector } from 'react-redux'
 
 function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(' ')
 }
 
-type SortTerm = 'newest' | 'most_likes' | 'yours' | "none";
+type SortTerm = 'new' | 'most_likes' | 'yours' | "none";
 
 export default function DropDown() {
-  const [sort, setSort] = useState<SortTerm>("none");
+  const { sortBy } = useSelector((state: { posts: { sortBy: SortTerm } }) => state.posts);
+
+  const useDispatch = useAppDispatch();
 
   return (
     <Menu as="div" className="relative inline-block text-left w-32">
       <div>
         <Menu.Button className="select-none inline-flex w-full justify-center gap-x-1.5 rounded-md bg-[#222d3c] px-3 py-2 text-sm font-semibold text-gray-300  ring-1 ring-inset transition-all ring-[#222d3c] hover:ring-gray-300">
-          {sort === "none" ? "Sort By" : sort === "newest" ? "Newest" : sort === "most_likes" ? "Most Likes" : "Your Posts"}
+          {sortBy === "none" ? "Sort By" : sortBy === "new" ? "Newest" : sortBy === "most_likes" ? "Most Likes" : "Your Posts"}
           <ChevronDownIcon className="-mr-1 h-5 w-5 text-gray-400" aria-hidden="true" />
         </Menu.Button>
       </div>
@@ -35,11 +39,12 @@ export default function DropDown() {
             <Menu.Item>
               {({ active }) => (
                 <a
-                  onClick={() => setSort("newest")}
-                  href="#"
+                  onClick={() => {
+                    sortBy !== "new" ? useDispatch(changeSortBy("new")) : null;
+                  }}
                   className={classNames(
                     active ? 'bg-gray-800 text-gray-300' : 'text-gray-300',
-                    'block px-4 py-2 text-sm'
+                    'block px-4 py-2 text-sm cursor-pointer'
                   )}
                 >
                   Newest
@@ -49,11 +54,12 @@ export default function DropDown() {
             <Menu.Item>
               {({ active }) => (
                 <a
-                  onClick={() => setSort("most_likes")}
-                  href="#"
+                  onClick={() => {
+                    sortBy !== "most_likes" ? useDispatch(changeSortBy("most_likes")) : null;
+                  }}
                   className={classNames(
                     active ? 'bg-gray-800 text-gray-300' : 'text-gray-300',
-                    'block px-4 py-2 text-sm'
+                    'block px-4 py-2 text-sm cursor-pointer'
                   )}
                 >
                   Most Likes
@@ -63,11 +69,12 @@ export default function DropDown() {
             <Menu.Item>
               {({ active }) => (
                 <a
-                  onClick={() => setSort("yours")}
-                  href="#"
+                  onClick={() => {
+                    sortBy !== "yours" ? useDispatch(changeSortBy("yours")) : null;
+                  }}
                   className={classNames(
                     active ? 'bg-gray-800 text-gray-300' : 'text-gray-300',
-                    'block px-4 py-2 text-sm'
+                    'block px-4 py-2 text-sm cursor-pointer'
                   )}
                 >
                   Your Posts
