@@ -1,7 +1,7 @@
 import PostDeskHeader from "./PostDeskHeader";
 import PostItem from "./PostItem";
 import { useEffect, useState } from 'react';
-import { fetchPostsThunk, fetchPostsPushbackThunk } from "../store";
+import { fetchPostsThunk } from "../store";
 import { useAppDispatch, useAppSelector } from "../hooks/reduxHooks";
 import { changePage, changeSortBy } from "../store/slices/postsSlice";
 import axios from "axios";
@@ -22,7 +22,7 @@ function PostDesk() {
 
   const loadMore = () => {
     useDispatch(changePage(page + 1));
-    useDispatch(fetchPostsPushbackThunk({ sortTerm: sortBy, page: page + 1 }));
+    useDispatch(fetchPostsThunk({ sortTerm: sortBy, page: page + 1 }));
   }
 
   const lastProductRef = useIntersectionObserver<HTMLElement>(() => {
@@ -56,7 +56,7 @@ function PostDesk() {
   );
 
   let content = (
-    <div className="w-[95%] flex flex-wrap mt-5 gap-4">
+    <div className="w-[95%] justify-center md:justify-start flex flex-wrap mt-5 gap-4">
       {data.map((post, i, posts) => {
         return <PostItem reff={posts.length - 1 === i ? lastProductRef : null} key={i} id={Number(post.id)} title={post.title} content={post.content} authorname={post.author} createdAt={post.created_at} likes_count={post.likes_count} like={post.like} />
       })}

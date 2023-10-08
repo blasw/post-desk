@@ -5,10 +5,11 @@ const Storage = require('./storage/storage');
 const pool = require('./storage/pool');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+require ('dotenv').config();
 
 const app = express();
 
-// Setting up CORS with allowed cookies
+//Setting up CORS with allowed cookies on dev server
 app.use(cors({
     origin: "http://localhost:5173",
     credentials: true
@@ -20,6 +21,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // Parse application/json
 app.use(bodyParser.json());
 
+//on deploy
+// app.use(express.static("../client/dist"));
+
 
 // Creating a Logger instance
 const log = new Logger('DEBUG');
@@ -30,6 +34,6 @@ const storage = new Storage(pool);
 require("./routes")(app, storage, log);
 
 // Starting server
-app.listen(3000, () => {
-    log.infoMsg("server.js", "Server is listening", "Port: 3000");
+app.listen(process.env.SERVER_PORT, () => {
+    log.infoMsg("server.js", "Server is listening", `Port: ${process.env.SERVER_PORT}`);
 });

@@ -69,7 +69,7 @@ function PostItem({reff, id, title, content, authorname, createdAt, likes_count,
   }
 
   return (
-    <div ref={reff} className="w-[32.1%] h-[250px] bg-[#263243] rounded-lg shadow-md transition-all hover:-translate-y-2 hover:scale-[1.03] hover:shadow-lg">
+    <div ref={reff} className="w-[300px] md:w-[32.1%] h-[250px] bg-[#263243] rounded-lg shadow-md transition-all hover:-translate-y-2 hover:scale-[1.03] hover:shadow-lg">
       <div className="h-full w-full flex flex-col justify-between">
         <div className="px-4 pt-2">
           <div className="text-center text-gray-300 text-xl font-semibold select-none">

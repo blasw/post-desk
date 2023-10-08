@@ -20,8 +20,8 @@ function UserPage() {
     <div className="flex flex-col gap-16">
       <Header />
 
-      <div className="w-full flex justify-center h-[600px]">
-        <div className="rounded-lg bg-gray-800 w-[70%]">
+      <div className="w-full flex justify-center h-[650px]">
+        <div className="rounded-lg bg-gray-800 w-[90%] md:w-[70%]">
           {content}
         </div>
       </div>

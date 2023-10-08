@@ -38,7 +38,7 @@ function Header() {
           <FullLogo width={150} />
         </div>
 
-        <div></div>
+        <div className=""></div>
 
         <div className="flex gap-5 px-2 items-center">
 

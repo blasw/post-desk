@@ -87,7 +87,7 @@ function PostDeskHeader({reff, onPostCreate} : PostDeskHeaderProps) {
       <DropDown />
 
       <dialog ref={modalRef} className="modal">
-        <div className="modal-box w-[500px] bg-gray-800">
+        <div className="modal-box w-[350px] md:w-[500px] bg-gray-800">
           <form method="dialog">
             {/* if there is a button in form, it will close the modal */}
             <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 select-none focus:outline-none">✕</button>

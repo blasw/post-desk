@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { fetchPostsThunk } from "../thunks/fetchPosts";
-import { fetchPostsPushbackThunk } from "../thunks/fetchPostsPushback";
 
 interface Post {
   id: string,
@@ -35,7 +34,7 @@ const postsSlice = createSlice({
   },
   extraReducers(builder) {
     //FETCHING POSTS
-    builder.addCase(fetchPostsThunk.pending, (state, action)=>{
+    builder.addCase(fetchPostsThunk.pending, (state)=>{
       state.isLoading = true;
     });
     builder.addCase(fetchPostsThunk.fulfilled, (state, action)=>{

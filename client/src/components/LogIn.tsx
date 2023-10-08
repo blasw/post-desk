@@ -60,7 +60,7 @@ function LogIn() {
 
           <input value={password} className="w-[50%] h-10 rounded-md bg-[#263243] text-gray-300 px-2 mt-5" placeholder="Password" type="password" onChange={(event) => { setPassword(event.target.value) }} />
 
-          <button onClick={signUpHandler} className="w-[20%] h-10 rounded-md bg-[#007720b7] hover:bg-[#007720d6] text-gray-300 px-2 mt-5">Sign Up</button>
+          <button onClick={signUpHandler} className="w-[30%] md:w-[20%] h-10 rounded-md bg-[#007720b7] hover:bg-[#007720d6] text-gray-300 px-2 mt-5">Sign Up</button>
 
           <h1 className="text-gray-500 mt-5 cursor-pointer select-none" onClick={() => setSignup(false)}>Already have an account? Log in here.</h1>
         </div>
@@ -72,7 +72,7 @@ function LogIn() {
 
           <input value={password} className="w-[50%] h-10 rounded-md bg-[#263243] text-gray-300 px-2 mt-5" placeholder="Password" type="password" onChange={(event) => { setPassword(event.target.value) }} />
 
-          <button onClick={LogInHandler} className="w-[20%] h-10 rounded-md bg-[#007720b7] hover:bg-[#007720d6] text-gray-300 px-2 mt-5">Log In</button>
+          <button onClick={LogInHandler} className="w-[30%] md:w-[20%] h-10 rounded-md bg-[#007720b7] hover:bg-[#007720d6] text-gray-300 px-2 mt-5">Log In</button>
 
           <h1 className="text-gray-500 mt-5 cursor-pointer select-none" onClick={() => setSignup(true)}>Don't have an account? Sign up here.</h1>
         </div>
