@@ -34,6 +34,6 @@ const storage = new Storage(pool);
 require("./routes")(app, storage, log);
 
 // Starting server
-app.listen(process.env.PORT, "0.0.0.0", () => {
+app.listen(process.env.PORT, () => {
     log.infoMsg("server.js", "Server is listening", `Port: ${process.env.PORT}`);
 });
