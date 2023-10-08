@@ -4,6 +4,7 @@ import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import { useAppDispatch } from '../hooks/reduxHooks'
 import { changeSortBy } from '../store/slices/postsSlice'
 import { useSelector } from 'react-redux'
+import useNotify from '../hooks/useNotify'
 
 function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(' ')
@@ -13,6 +14,8 @@ type SortTerm = 'new' | 'most_likes' | 'yours' | "none";
 
 export default function DropDown() {
   const { sortBy } = useSelector((state: { posts: { sortBy: SortTerm } }) => state.posts);
+
+  const username = useSelector((state: { user: { username: string } }) => state.user.username);
 
   const useDispatch = useAppDispatch();
 
@@ -70,6 +73,10 @@ export default function DropDown() {
               {({ active }) => (
                 <a
                   onClick={() => {
+                    if(!username){
+                      useNotify("error", "You are not authorized!");
+                      return;
+                    }
                     sortBy !== "yours" ? useDispatch(changeSortBy("yours")) : null;
                   }}
                   className={classNames(
