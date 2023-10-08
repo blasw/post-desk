@@ -10,10 +10,10 @@ require ('dotenv').config();
 const app = express();
 
 //Setting up CORS with allowed cookies on dev server
-// app.use(cors({
-//     origin: "http://localhost:5173",
-//     credentials: true
-// }));
+app.use(cors({
+    origin: "http://localhost:5173",
+    credentials: true
+}));
 // Parse cookies
 app.use(cookieParser());
 // Parse application/x-www-form-urlencoded
@@ -22,7 +22,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 //on deploy
-app.use(express.static("./dist"));
+// app.use(express.static("../client/dist"));
 
 
 // Creating a Logger instance
