@@ -9,7 +9,7 @@ function App() {
   useAuth();
 
   return (
-    <div className="bg-gray-900 h-[1000px]">
+    <div className="bg-gray-900 h-fit">
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<MainPage />} />

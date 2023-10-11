@@ -31,6 +31,11 @@ function PostDeskHeader({reff, onPostCreate} : PostDeskHeaderProps) {
       return;
     }
 
+    if (content.length < 5) {
+      useNotify("error", "Content is too short!");
+      return;
+    }
+
     await axios.post(`${vars.server_url}/posts/add`, {
       title, content, username
     }, {withCredentials: true}).then((res) => {

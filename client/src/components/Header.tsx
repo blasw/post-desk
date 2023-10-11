@@ -8,6 +8,7 @@ import { useAppDispatch } from "../hooks/reduxHooks";
 import { logout } from "../store/slices/userSlice";
 import { toast } from "react-toastify";
 import vars from "../vars";
+import { changeSortBy } from "../store/slices/postsSlice";
 
 function Header() {
   const username = useSelector((state: { user: { username: string } }) => state.user.username);
@@ -28,6 +29,8 @@ function Header() {
     //removing token from cookies
     axios.get(`${vars.server_url}/users/logout`, {withCredentials: true});
     useDispatch(logout());
+    useDispatch(changeSortBy("most_likes"))
+    useDispatch(changeSortBy("new"))
     notifyInfo();
   }
 
