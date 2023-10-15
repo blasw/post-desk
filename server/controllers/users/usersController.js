@@ -58,7 +58,7 @@ exports.loginUser = function (storage, log){
                 const token = jwt.sign({username: username}, "debug", {expiresIn: '24h'});
 
                 res.cookie('token', token, {
-                    httpOnly: true, 
+                    httpOnly: false, 
                     maxAge: 24 * 60 * 60 * 1000
                 });
 
