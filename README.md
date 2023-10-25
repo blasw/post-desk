@@ -24,7 +24,8 @@ Setting up Post Desk:
   cd server
   npm i
   cd ..
-  cd client npm i
+  cd client
+  npm i
 ```
 
 Running on local machine:
